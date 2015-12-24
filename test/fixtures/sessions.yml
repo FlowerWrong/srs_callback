@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  action: MyString
+  client_id: 1
+  ip: MyString
+  vhost: MyString
+  app: MyString
+  stream: MyString
+  page_url: MyString
+
+two:
+  action: MyString
+  client_id: 1
+  ip: MyString
+  vhost: MyString
+  app: MyString
+  stream: MyString
+  page_url: MyString
