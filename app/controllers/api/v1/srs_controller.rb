@@ -54,7 +54,7 @@ class Api::V1::SrsController < ApplicationController
     # elsif pa['action'] == 'on_close'
     # else
     # end
-    render plain: 0, status: :ok
+    render plain: '0', status: :ok
   end
 
   # on_publish
@@ -100,7 +100,7 @@ class Api::V1::SrsController < ApplicationController
     # else
     # end
 
-    render plain: 0, status: :ok
+    render plain: '0', status: :ok
   end
 
   # on_play
@@ -124,7 +124,7 @@ class Api::V1::SrsController < ApplicationController
     else
       Rails.logger.info "sessions: #{__LINE__} bug, no this action, params is #{pa}"
     end
-    render plain: 0, status: :ok
+    render plain: '0', status: :ok
   end
 
   # on_dvr
@@ -134,7 +134,7 @@ class Api::V1::SrsController < ApplicationController
     # if pa['action'] == 'on_dvr'
     # else
     # end
-    render plain: 0, status: :ok
+    render plain: '0', status: :ok
   end
 
   def hls
@@ -147,6 +147,6 @@ class Api::V1::SrsController < ApplicationController
     # elsif request.method == 'GET'
     # else
     # end
-    render plain: 0, status: :ok
+    render plain: '0', status: :ok
   end
 end

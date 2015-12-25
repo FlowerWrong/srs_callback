@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>live with videojs</title>
+  <link href="/plugins/video.js/dist/video-js.css" rel="stylesheet">
+  <link href="/plugins/vjs-resolution-switcher/lib/videojs-resolution-switcher.css" rel="stylesheet">
+</head>
+<body>
+  <h1>videojs测试结果: linux下chrome47不支持hls.js，firefox43.0支持</h1>
+  <video id='video' class="video-js vjs-default-skin"></video>
+  <script src="/plugins/video.js/dist/video.js"></script>
+  <script src="/plugins/vjs-resolution-switcher/lib/videojs-resolution-switcher.js"></script>
+  <script>
+    videojs('video', {
+      controls: true,
+      plugins: {
+          videoJsResolutionSwitcher: {
+            default: 'high',
+            dynamicLabel: true
+          }
+        }
+    }, function(){
+      // Add dynamically sources via updateSrc method
+      this.updateSrc([
+          {
+            src: 'rtmp://127.0.0.1:1935/live/livestream',
+            type: 'rtmp/mp4',
+            label: '720P'
+          },
+          {
+            src: 'rtmp://127.0.0.1:1935/live/livestream_sd',
+            type: 'rtmp/mp4',
+            label: '240P'
+          }
+        ])
+
+        this.on('resolutionchange', function(){
+          console.info('Source changed to %s', this.src())
+        })
+    })
+  </script>
+</body>
+</html>

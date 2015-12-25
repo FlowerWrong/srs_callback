@@ -1,0 +1,26 @@
+<html>
+<head>
+  <title>live</title>
+  <script type="text/javascript" src="/clappr-0.2.29/dist/clappr.min.js"></script>
+  <script type="text/javascript" src="/clappr-rtmp-plugin-0.0.11/dist/rtmp.min.js"></script>
+</head>
+<body>
+  <h1>测试结果: linux下chrome47不支持hls.js，firefox43.0支持</h1>
+  <div id="player"></div>
+  <script>
+    var player = new Clappr.Player({source: "http://192.168.10.160/live/livestream.m3u8", parentId: "#player"});
+    // var player = new Clappr.Player({
+    //   source: "rtmp://127.0.0.1:1935/live/livestream",
+    //   parentId: "#player",
+    //   plugins: {'playback': [RTMP]},
+    //   rtmpConfig: {
+    //     swfPath: '/clappr-rtmp-plugin-0.0.11/dist/assets/RTMP.swf',
+    //     scaling:'stretch',
+    //     playbackType: 'live',
+    //     bufferTime: 1,
+    //     startLevel: 0,
+    //   },
+    // });
+  </script>
+</body>
+</html>

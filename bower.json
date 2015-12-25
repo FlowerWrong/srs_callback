@@ -1,0 +1,27 @@
+{
+  "name": "srs_callback",
+  "homepage": "https://github.com/FlowerWrong/srs_callback",
+  "authors": [
+    "flowerwrong <sysuyangkang@gmail.com>"
+  ],
+  "description": "live",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "live"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/plugins",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "video.js": "~5.4.6",
+    "vjs-resolution-switcher": "videojs-resolution-switcher#~0.3.0"
+  }
+}

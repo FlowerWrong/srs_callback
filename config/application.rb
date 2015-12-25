@@ -22,9 +22,25 @@ module SrsCallback
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    config.generators do |g|
+      g.orm :active_record
+      g.template_engine :erb
+      g.stylesheets false
+      g.javascripts false
+      g.jbuilder false
+      g.helper false
+    end
+
+    config.i18n.available_locales = [:'zh-CN', :zh]
+    config.i18n.default_locale = :'zh-CN'
+
+    config.active_record.default_timezone = :local
+    config.time_zone = 'Beijing'
+    config.encoding = 'utf-8'
+
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
+    config.api_only = false
   end
 end
