@@ -36,6 +36,31 @@ sudo ./objs/nginx/sbin/nginx
 
 * `--with-http-server` must have, even if we are not using it.
 
+## install ruby 2.3.0 from source code
+
+```bash
+wget https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz
+tar -zxvf ruby-2.3.0.tar.gz
+cd ruby-2.3.0/
+./configure --prefix=/data/app/softwares/rubies
+make
+make install
+
+sudo vim /etc/environment
+# add `/data/app/softwares/rubies/bin` to path
+ruby -v
+gem -v
+
+sudo ln -s /data/app/softwares/rubies/bin/ruby /usr/bin/ruby
+sudo ln -s /data/app/softwares/rubies/bin/ /usr/bin/gem
+
+gem sources -l
+gem sources --add https://ruby.taobao.org/ --remove https://rubygems.org/
+gem sources -l
+
+gem install bundler
+```
+
 ## srs.conf
 
 ```nginx
