@@ -4,10 +4,10 @@ class Api::V1::SessionsController < ApplicationController
   def index
     app = params[:app] || 'live'
     stream = params[:stream] || 'livestream'
-    hours_ago = params[:hours_ago].to_i || 4
+    hours_ago = (params[:hours_ago] || 4).to_i
     now = Time.now
-    base_h = {created_at: (now - hours_ago)..now, app: app, stream: stream}
-    online_users = Session.where(base_h.merge!(status: 1)).count
+    base_h = {created_at: (now - hours_ago.hours)..now, app: app, stream: stream}
+    online_users = Session.where(base_h.merge(status: 1)).count
     all_users = Session.where(base_h).count
     render json: {online_count: online_users, all_users_count: all_users}
   end

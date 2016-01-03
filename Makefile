@@ -1,6 +1,7 @@
 .DEFAULT_GOAL = start
 
 start:
+	rake db:drop db:create db:migrate db:seed
 	rails s -b 0.0.0.0 -p 8085
 
 start_puma:
