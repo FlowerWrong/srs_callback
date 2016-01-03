@@ -48,6 +48,8 @@ make install
 
 sudo vim /etc/environment
 # add `/data/app/softwares/rubies/bin` to path
+source /etc/environment
+
 ruby -v
 gem -v
 
