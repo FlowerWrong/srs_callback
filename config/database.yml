@@ -50,5 +50,5 @@ test:
 production:
   <<: *default
   database: srs_callback_production
-  username: srs_callback
-  password: <%= ENV['SRS_CALLBACK_DATABASE_PASSWORD'] %>
+  username: root
+  password: root
