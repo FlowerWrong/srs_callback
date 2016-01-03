@@ -11,6 +11,8 @@ Rails.application.routes.draw do
       post 'dvrs', to: 'srs#dvrs'
       post 'hls', to: 'srs#hls'
       get 'hls/:app/:stream_and_ts', to: 'srs#hls'
+
+      get 'users', to: 'sessions#index'
     end
   end
 

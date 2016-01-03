@@ -1,4 +1,4 @@
-require 'awesome_print'
+require 'awesome_print' if Rails.env == 'production'
 
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
