@@ -17,10 +17,12 @@ class Api::V1::SrsController < ApplicationController
       white_ips = Settings.white_ip_list.split(' ')
       client_ip = pa['ip']
       # 先验证白名单
+      # p "white_ips.include? client_ip is #{white_ips.include? client_ip}"
       unless white_ips.include? client_ip
         # 再验证token
         white_tokens = Settings.token_list.split(' ')
         client_token = pa['tcUrl'].last(32)
+        # p "white_tokens.include? client_token is #{white_tokens.include? client_token}"
         unless white_tokens.include? client_token
           render(plain: 'auth failed', status: 401) && return
         end
