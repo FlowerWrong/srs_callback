@@ -12,6 +12,23 @@ class Api::V1::SrsController < ApplicationController
   # on_publish
   # on_unpublish
   def streams
+    pa = request.request_parameters
+    if pa['action'] == 'on_publish'
+      white_ips = Settings.white_ip_list.split(' ')
+      client_ip = pa['ip']
+      # 先验证白名单
+      unless white_ips.include? client_ip
+        # 再验证token
+        white_tokens = Settings.token_list.split(' ')
+        client_token = pa['tcUrl'].last(32)
+        unless white_tokens.include? client_token
+          render(plain: 'auth failed', status: 401) && return
+        end
+      end
+    elsif pa['action'] == 'on_unpublish'
+    else
+    end
+
     render plain: '0', status: :ok
   end
 
