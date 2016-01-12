@@ -15,8 +15,6 @@ gem 'puma'
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
-gem 'lograge'
-
 gem 'settingslogic'
 
 gem 'redis'
@@ -25,6 +23,8 @@ gem 'redis-namespace'
 # gem 'sinatra', github: 'sinatra/sinatra', require: nil
 gem 'sidekiq'
 gem 'sidekiq-status'
+
+gem 'rest-client', require: false
 gem 'streamio-ffmpeg'
 
 group :development, :test do

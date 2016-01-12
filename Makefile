@@ -26,4 +26,4 @@ c:
 	rails c
 
 sidekiq:
-	bundle exec sidekiq -q default
+	bundle exec sidekiq -q default -L log/sidekiq.log

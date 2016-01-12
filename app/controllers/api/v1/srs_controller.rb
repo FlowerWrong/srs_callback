@@ -1,4 +1,3 @@
-# require 'awesome_print' if Rails.env != 'production'
 require 'sidekiq/api'
 
 class Api::V1::SrsController < ApplicationController
@@ -18,12 +17,10 @@ class Api::V1::SrsController < ApplicationController
       white_ips = Settings.white_ip_list.split(' ')
       client_ip = pa['ip']
       # 先验证白名单
-      # p "white_ips.include? client_ip is #{white_ips.include? client_ip}"
       unless white_ips.include? client_ip
         # 再验证token
         white_tokens = Settings.token_list.split(' ')
         client_token = pa['tcUrl'].last(32)
-        # p "white_tokens.include? client_token is #{white_tokens.include? client_token}"
         unless white_tokens.include? client_token
           render(plain: 'auth failed', status: 401) && return
         end
@@ -33,7 +30,6 @@ class Api::V1::SrsController < ApplicationController
       # @see https://github.com/mperham/sidekiq/wiki/API
       # @see https://github.com/utgarda/sidekiq-status#unscheduling
       # FIXME why twice?
-      # TODO add http stream api
       live_transcodes = Transcode.where(ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
       if live_transcodes.blank?
         live_clients = LiveClient.where(client_id: pa['client_id'], ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
@@ -49,20 +45,7 @@ class Api::V1::SrsController < ApplicationController
           )
           lc.save
 
-          job = TranscodeJob.perform_later('/home/yy/bin/ffmpeg', 'rtmp://192.168.10.160/live/demo', 'rtmp://192.168.10.160/live?token=11111111111111111111111111111111/livestream')
-          job_id = job.provider_job_id
-
-          Transcode.create(
-            live_client_id: lc.id,
-            input_rtmp: 'rtmp://192.168.10.160/live/demo',
-            output_rtmp: 'rtmp://192.168.10.160/live/livestream',
-            ip: pa['ip'],
-            vhost: pa['vhost'],
-            app: pa['app'],
-            stream: 'livestream',
-            status: 1,
-            job_id: job_id
-          )
+          ScaleTranscodeJob.perform_later([pa, lc.id], 'rtmp://192.168.10.160/live/demo')
         end
       end
     elsif pa['action'] == 'on_unpublish'
@@ -77,12 +60,16 @@ class Api::V1::SrsController < ApplicationController
       end
 
       @live_transcodes.each do |lt|
-        unless Sidekiq::Status.cancel(lt.job_id)
+        # FIXME how to del a job
+        flag = Sidekiq::Status.cancel(lt.job_id)
+        unless flag
           queue = Sidekiq::Queue.new
-          queue.each { |job| job.delete if job.jid == lt.job_id }
+          queue.each do |job|
+            job.delete if job.jid == lt.job_id
+          end
         end
         lt.update(status: 0)
-      end unless live_transcodes.blank?
+      end unless @live_transcodes.blank?
     else
       render(plain: 'auth failed', status: 401) && return
     end
