@@ -24,3 +24,6 @@ startp:
 
 c:
 	rails c
+
+sidekiq:
+	bundle exec sidekiq -q default

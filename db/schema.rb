@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151224075432) do
+ActiveRecord::Schema.define(version: 20160112050142) do
+
+  create_table "live_clients", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "client_id"
+    t.string   "ip"
+    t.string   "vhost"
+    t.string   "app"
+    t.string   "stream"
+    t.string   "tc_url"
+    t.integer  "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "sessions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "client_id"
@@ -23,6 +35,20 @@ ActiveRecord::Schema.define(version: 20151224075432) do
     t.integer  "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "transcodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "live_client_id"
+    t.string   "input_rtmp"
+    t.string   "output_rtmp"
+    t.string   "ip"
+    t.string   "vhost"
+    t.string   "app"
+    t.string   "stream"
+    t.integer  "status"
+    t.string   "job_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
 end

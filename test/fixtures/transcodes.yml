@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  live_client_id: 1
+  input_rtmp: MyString
+  output_rtmp: MyString
+
+two:
+  live_client_id: 1
+  input_rtmp: MyString
+  output_rtmp: MyString

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  client_id: 1
+  ip: MyString
+  vhost: MyString
+  app: MyString
+  stream: MyString
+  tc_url: MyString
+  status: 1
+  job_id: MyString
+
+two:
+  client_id: 1
+  ip: MyString
+  vhost: MyString
+  app: MyString
+  stream: MyString
+  tc_url: MyString
+  status: 1
+  job_id: MyString

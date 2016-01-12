@@ -1,4 +1,5 @@
 # require 'awesome_print' if Rails.env != 'production'
+require 'sidekiq/api'
 
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
@@ -27,8 +28,63 @@ class Api::V1::SrsController < ApplicationController
           render(plain: 'auth failed', status: 401) && return
         end
       end
+
+      # @see https://github.com/mperham/sidekiq/wiki/Active-Job#job-id
+      # @see https://github.com/mperham/sidekiq/wiki/API
+      # @see https://github.com/utgarda/sidekiq-status#unscheduling
+      # FIXME why twice?
+      # TODO add http stream api
+      live_transcodes = Transcode.where(ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
+      if live_transcodes.blank?
+        live_clients = LiveClient.where(client_id: pa['client_id'], ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
+        if live_clients.blank?
+          lc = LiveClient.new(
+            client_id: pa['client_id'],
+            ip: pa['ip'],
+            vhost: pa['vhost'],
+            app: pa['app'],
+            stream: pa['stream'],
+            tc_url: pa['tcUrl'],
+            status: 1
+          )
+          lc.save
+
+          job = TranscodeJob.perform_later('/home/yy/bin/ffmpeg', 'rtmp://192.168.10.160/live/demo', 'rtmp://192.168.10.160/live?token=11111111111111111111111111111111/livestream')
+          job_id = job.provider_job_id
+
+          Transcode.create(
+            live_client_id: lc.id,
+            input_rtmp: 'rtmp://192.168.10.160/live/demo',
+            output_rtmp: 'rtmp://192.168.10.160/live/livestream',
+            ip: pa['ip'],
+            vhost: pa['vhost'],
+            app: pa['app'],
+            stream: 'livestream',
+            status: 1,
+            job_id: job_id
+          )
+        end
+      end
     elsif pa['action'] == 'on_unpublish'
+      live_clients = LiveClient.where(client_id: pa['client_id'], ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
+      if live_clients.blank?
+        @live_transcodes = Transcode.where(ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
+      else
+        live_clients.each do |lc|
+          lc.update(status: 0)
+          @live_transcodes = lc.transcodes
+        end
+      end
+
+      @live_transcodes.each do |lt|
+        unless Sidekiq::Status.cancel(lt.job_id)
+          queue = Sidekiq::Queue.new
+          queue.each { |job| job.delete if job.jid == lt.job_id }
+        end
+        lt.update(status: 0)
+      end unless live_transcodes.blank?
     else
+      render(plain: 'auth failed', status: 401) && return
     end
 
     render plain: '0', status: :ok

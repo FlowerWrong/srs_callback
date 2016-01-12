@@ -3,6 +3,8 @@ zh-CN:
     models:
       # TODO 无法标识一个直播
       session: 在线用户
+      live_client: 主播
+      transcode: 转码
 
     attributes:
       session:
@@ -13,6 +15,27 @@ zh-CN:
         stream: stream
         page_url: page_url
         status: 1online,0offline
+
+      live_client:
+        client_id: client_id
+        ip: ip
+        vhost: vhost
+        app: app
+        stream: stream
+        tc_url: tc_url
+        status: 1online,0offline
+
+      transcode:
+        live_client_id: live client
+        input_rtmp: input rtmp
+        output_rtmp: output rtmp
+        ip: ip
+        vhost: vhost
+        app: app
+        stream: stream
+        status: 1online,0offline
+        job_id: background job id
+
 
   date:
     abbr_day_names:
