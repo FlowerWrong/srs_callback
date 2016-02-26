@@ -125,8 +125,6 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    streamio-ffmpeg (2.0.0)
-      multi_json (~> 1.8)
     thor (0.19.1)
     thread_safe (0.3.5)
     tzinfo (1.2.2)
@@ -156,7 +154,6 @@ DEPENDENCIES
   settingslogic
   sidekiq
   sidekiq-status
-  streamio-ffmpeg
   tzinfo-data
 
 BUNDLED WITH
