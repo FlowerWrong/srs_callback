@@ -23,7 +23,7 @@ app_dir = File.expand_path('../..', __FILE__)
 #
 # The default is "config.ru".
 #
-# rackup '/u/apps/lolcat/config.ru'
+rackup "#{app_dir}/config.ru"
 
 # Set the environment in which the rack's app will run. The value must be a string.
 #
@@ -54,13 +54,13 @@ state_path "#{app_dir}/tmp/pids/puma.state"
 # "false".
 #
 # stdout_redirect '/u/apps/lolcat/log/stdout', '/u/apps/lolcat/log/stderr'
-stdout_redirect "#{app_dir}/log/stdout", "#{app_dir}/log/stderr", true
+stdout_redirect "#{app_dir}/log/stdout.log", "#{app_dir}/log/stderr.log", true
 
 # Disable request logging.
 #
 # The default is "false".
 #
-# quiet
+quiet
 
 # Configure "min" to be the minimum number of threads to use to answer
 # requests and "max" the maximum.

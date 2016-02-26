@@ -12,6 +12,7 @@ Srs callback with srs 2.0 release and ffmpeg.
 * [srs.conf](https://github.com/FlowerWrong/srs_callback/blob/master/config/srs.conf)
 * [srs wiki](https://github.com/ossrs/srs/wiki)
 * support ubuntu, centos and osx
+* [google youtube 直播编码器设置、比特率和分辨率](https://support.google.com/youtube/answer/2853702?hl=zh-Hans)
 
 ```bash
 bower install
