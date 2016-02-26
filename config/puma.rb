@@ -38,7 +38,7 @@ environment rails_env
 # The default is "false".
 #
 # daemonize
-daemonize true
+daemonize false
 
 # Store the pid of the server in the file at "path".
 #
@@ -114,6 +114,7 @@ workers 2
 #
 on_worker_boot do
   puts 'On worker boot...'
+  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 end
 
 # Code to run when a worker boots to setup the process after booting
@@ -142,7 +143,7 @@ end
 # Preload the application before starting the workers; this conflicts with
 # phased restart feature. (off by default)
 
-# preload_app!
+preload_app!
 
 # Additional text to display in process listing
 #
