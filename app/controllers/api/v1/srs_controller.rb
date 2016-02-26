@@ -1,7 +1,10 @@
 require 'sidekiq/api'
+require 'json'
 
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
+
+  after_action only: [:streams] { |c| c.scale_transcodes lc.id }
 
   # on_connect
   # on_close
@@ -44,8 +47,6 @@ class Api::V1::SrsController < ApplicationController
             status: 1
           )
           lc.save
-
-          ScaleTranscodeJob.perform_later([pa, lc.id], 'rtmp://192.168.10.160/live/demo')
         end
       end
     elsif pa['action'] == 'on_unpublish'
@@ -108,5 +109,83 @@ class Api::V1::SrsController < ApplicationController
 
   def hls
     render plain: '0', status: :ok
+  end
+
+  private
+
+  def scale_transcodes(live_client_id)
+    pa = request.request_parameters
+    if pa['action'] == 'on_publish' && pa['ip'] != '127.0.0.1' # FIXME 怎么判断这次的stream是转码后的
+
+      sleep 2
+      res_json_str = RestClient.get("#{Settings.rtmp_api}/streams/")
+      Rails.logger.info("res_json_str is #{res_json_str}")
+      res_hash = JSON.parse(res_json_str)
+
+      res_hash['streams'].each do |stream|
+        if stream['name'] == pa['stream'] && stream['app'] = pa['app'] && stream['publish']['active']
+          video_data_rate = stream['video']['video_data_rate']
+          audio_data_rate = stream['audio']['audio_data_rate']
+          bit_rate = video_data_rate.to_i + audio_data_rate.to_i
+
+          transcodes = []
+          input_rtmp = "#{pa['tcUrl']}/#{pa['stream']}"
+          output_rtmp_prefix = "#{pa['tcUrl']}/#{pa['stream']}"
+
+          # @see https://support.google.com/youtube/answer/2853702?hl=zh-Hans
+          case bit_rate
+          when 6000..10000 # 1080p@60fps -> 720p, 480p, 360p
+            ['720p', '480p', '360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          when 4000..6000 # 1080p -> 720p, 480p, 360p
+            ['720p', '480p', '360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          when 2500..4000 # 720p@60fps -> 480p, 360p
+            ['480p', '360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          when 1500..2500 # 720p -> 480p, 360p
+            ['480p', '360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          when 1000..1500 # 480p -> 360p
+            ['360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          when 600..1000 # 360p
+            ['360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          when 0..600 # 240p
+            ['360p'].each do |transcode_stream|
+              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            end
+          end
+
+          transcodes.each do |t|
+            Transcode.create(
+              live_client_id: live_client_id,
+              input_rtmp: input_rtmp,
+              output_rtmp: "#{output_rtmp_prefix}_#{t[:transcode_stream]}",
+              ip: pa['ip'],
+              vhost: pa['vhost'],
+              app: pa['app'],
+              stream: "#{pa['stream']}_#{transcode_stream}",
+              status: 1,
+              job_id: t[:job_id]
+            )
+          end
+        end
+      end unless res_hash['streams'].blank?
+    end
   end
 end
