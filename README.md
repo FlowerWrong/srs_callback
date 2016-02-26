@@ -3,13 +3,14 @@
 Srs callback with srs 2.0 release and ffmpeg.
 
 * ruby: 2.3.0
-* rails: 5.0 beta1
+* rails: 5.0 beta3
 * mysql: 5.6+
 * ffmpeg: 2.1.1+(2.8.4)
 * srs: 2.0release or 3.0develop
 * sidekiq 4.0.2+
 * redis: 2.8.4+
 * [srs.conf](https://github.com/FlowerWrong/srs_callback/blob/master/config/srs.conf)
+* [srs wiki](https://github.com/ossrs/srs/wiki)
 
 ```bash
 bower install
