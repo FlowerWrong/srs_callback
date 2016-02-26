@@ -1,10 +1,9 @@
 require 'sidekiq/api'
 require 'json'
+require 'rest-client'
 
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
-
-  after_action only: [:streams] { |c| c.scale_transcodes lc.id }
 
   # on_connect
   # on_close
@@ -17,6 +16,7 @@ class Api::V1::SrsController < ApplicationController
   def streams
     pa = request.request_parameters
     if pa['action'] == 'on_publish'
+      Rails.logger.info("Rails on_publish params are #{pa}")
       white_ips = Settings.white_ip_list.split(' ')
       client_ip = pa['ip']
       # 先验证白名单
@@ -37,7 +37,7 @@ class Api::V1::SrsController < ApplicationController
       if live_transcodes.blank?
         live_clients = LiveClient.where(client_id: pa['client_id'], ip: pa['ip'], vhost: pa['vhost'], app: pa['app'], stream: pa['stream'], status: 1)
         if live_clients.blank?
-          lc = LiveClient.new(
+          @lc = LiveClient.new(
             client_id: pa['client_id'],
             ip: pa['ip'],
             vhost: pa['vhost'],
@@ -46,7 +46,7 @@ class Api::V1::SrsController < ApplicationController
             tc_url: pa['tcUrl'],
             status: 1
           )
-          lc.save
+          @lc.save
         end
       end
     elsif pa['action'] == 'on_unpublish'
@@ -76,6 +76,13 @@ class Api::V1::SrsController < ApplicationController
     end
 
     render plain: '0', status: :ok
+
+    Thread.new do
+      sleep 5
+      scale_transcodes(@lc.id, pa)
+      Rails.logger.info "on_publish thread status is #{Thread.current.status}"
+      Thread.current.exit
+    end if pa['action'] == 'on_publish' && !@lc.nil?
   end
 
   # on_play
@@ -113,12 +120,9 @@ class Api::V1::SrsController < ApplicationController
 
   private
 
-  def scale_transcodes(live_client_id)
-    pa = request.request_parameters
-    if pa['action'] == 'on_publish' && pa['ip'] != '127.0.0.1' # FIXME 怎么判断这次的stream是转码后的
-
-      sleep 2
-      res_json_str = RestClient.get("#{Settings.rtmp_api}/streams/")
+  def scale_transcodes(live_client_id, pa)
+    if pa['action'] == 'on_publish'
+      res_json_str = ::RestClient.get("#{Settings.rtmp_api}/streams/")
       Rails.logger.info("res_json_str is #{res_json_str}")
       res_hash = JSON.parse(res_json_str)
 
@@ -135,22 +139,22 @@ class Api::V1::SrsController < ApplicationController
           # @see https://support.google.com/youtube/answer/2853702?hl=zh-Hans
           case bit_rate
           when 6000..10000 # 1080p@60fps -> 720p, 480p, 360p
-            ['720p', '480p', '360p'].each do |transcode_stream|
+            ['720p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
           when 4000..6000 # 1080p -> 720p, 480p, 360p
-            ['720p', '480p', '360p'].each do |transcode_stream|
+            ['720p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
           when 2500..4000 # 720p@60fps -> 480p, 360p
-            ['480p', '360p'].each do |transcode_stream|
+            ['480p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
           when 1500..2500 # 720p -> 480p, 360p
-            ['480p', '360p'].each do |transcode_stream|
+            ['480p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
@@ -160,12 +164,12 @@ class Api::V1::SrsController < ApplicationController
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
           when 600..1000 # 360p
-            ['360p'].each do |transcode_stream|
+            ['240p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
           when 0..600 # 240p
-            ['360p'].each do |transcode_stream|
+            ['240p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end

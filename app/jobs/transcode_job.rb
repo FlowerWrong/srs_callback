@@ -8,6 +8,7 @@ class TranscodeJob < ApplicationJob
 
     ffmpeg = `which ffmpeg`.strip
 
+    # TODO May Add Params for some biterate
     cmd = %W(#{ffmpeg} -i #{input_rtmp} -vcodec copy -acodec copy -f flv -y #{output_rtmp})
     # cmd.concat(other_options.split(" "))
     cmd.reject!(&:empty?)

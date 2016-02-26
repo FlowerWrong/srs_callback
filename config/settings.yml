@@ -3,8 +3,8 @@ defaults: &defaults
   white_ip_list: ''
   token_list: '11111111111111111111111111111111 5e3daaa6ef9bf8143d66a6c95bdae852 479538e5429012e129fc05fe88491e53 5bcea17cf184283694ca891fbf92e6e5 d440776082dd0518b6cb47c946802466'
 
-  rtmp_server: '192.168.10.160:1985'
-  rtmp_api: 'http://192.168.10.160:1985/api/v1'
+  rtmp_server: '192.168.1.109:1985'
+  rtmp_api: 'http://192.168.1.109:1985/api/v1'
 
 development:
   <<: *defaults
