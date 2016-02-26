@@ -20,3 +20,6 @@
 /public/plugins/
 
 /.idea/
+
+/config/database.yml
+/config/secrets.yml
