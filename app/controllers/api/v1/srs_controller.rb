@@ -132,9 +132,13 @@ class Api::V1::SrsController < ApplicationController
           audio_data_rate = stream['audio']['audio_data_rate']
           bit_rate = video_data_rate.to_i + audio_data_rate.to_i
 
+          stream_name = pa['stream']
           transcodes = []
-          input_rtmp = "#{pa['tcUrl']}/#{pa['stream']}"
-          output_rtmp_prefix = "#{pa['tcUrl']}/#{pa['stream']}"
+          input_rtmp = "#{pa['tcUrl']}/#{stream_name}"
+
+          stream_reg = /[a-z|A-Z]+(\d+)p/ # livestream420p
+          origin_stream_name = stream_reg =~ stream_name ? $1 : stream_name
+          output_rtmp_prefix = "#{pa['tcUrl']}/#{origin_stream_name}"
 
           # @see https://support.google.com/youtube/answer/2853702?hl=zh-Hans
           case bit_rate

@@ -16,6 +16,8 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require 'silencer/logger'
+
 module SrsCallback
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -45,5 +47,7 @@ module SrsCallback
 
     config.active_job.queue_adapter = :sidekiq
     # config.active_job.queue_name_prefix = Rails.env
+
+    config.middleware.swap Rails::Rack::Logger, Silencer::Logger, :silence => [%r{^/}]
   end
 end
