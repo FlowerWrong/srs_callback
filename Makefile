@@ -1,11 +1,20 @@
 .DEFAULT_GOAL = start
 
+PID = ./tmp/pids/puma.pid
+
 start: setup start_puma
 
 pumap: setupp start_puma
 
 start_puma:
 	puma -C config/puma.rb
+
+# @see https://gist.github.com/tachesimazzoca/3891036
+restart_puma:
+	@[[ -s "$(PID)" ]] && kill -USR2 `cat $(PID)`
+
+stop_puma:
+	@[[ -s "$(PID)" ]] && kill -QUIT `cat $(PID)`
 
 setup:
 	rake db:drop db:create db:migrate db:seed
