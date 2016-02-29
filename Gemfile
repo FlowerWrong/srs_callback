@@ -25,7 +25,6 @@ gem 'sidekiq'
 gem 'sidekiq-status'
 
 gem 'rest-client', require: false
-# gem 'streamio-ffmpeg'
 
 gem 'silencer'
 

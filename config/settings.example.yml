@@ -4,6 +4,7 @@ defaults: &defaults
 
   rtmp_server: '192.168.1.105:1985'
   rtmp_api: 'http://192.168.1.105:1985/api/v1'
+  ffmpeg: ''
 
 development:
   <<: *defaults
@@ -13,3 +14,4 @@ test:
 
 production:
   <<: *defaults
+  ffmpeg: ''
