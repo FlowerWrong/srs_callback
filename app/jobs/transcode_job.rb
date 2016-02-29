@@ -7,15 +7,17 @@ class TranscodeJob < ApplicationJob
     output_rtmp = args[2] # rtmp://192.168.10.160/live?token=11111111111111111111111111111111/livestream
 
     # @see https://github.com/ossrs/srs/wiki/v2_CN_FFMPEG#transcode-rulers
+    # FIXME Unknown encoder 'libx264'
     ffmpeg_opts = "-vcodec libx264 -b:v #{bitrate2resolution[transcode_stream][:bitrate]} -r 30 -s #{bitrate2resolution[transcode_stream][:width]}x#{bitrate2resolution[transcode_stream][:height]} -aspect #{bitrate2resolution[transcode_stream][:width]}:#{bitrate2resolution[transcode_stream][:height]} -threads 8 -acodec libfdk_aac -b:a 128000 -ar 44100  -ac 2"
 
     ffmpeg = `which ffmpeg`.strip
 
     cmd = %W(#{ffmpeg} -v quiet -i #{input_rtmp} #{ffmpeg_opts} -f flv -y #{output_rtmp})
     # cmd.concat(other_options.split(" "))
+    Rails.logger.info cmd
     cmd.reject!(&:empty?)
 
-    system(*cmd)
+    system(cmd.join(' '))
   end
 
   private

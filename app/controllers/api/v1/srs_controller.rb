@@ -133,10 +133,11 @@ class Api::V1::SrsController < ApplicationController
           bit_rate = video_data_rate.to_i + audio_data_rate.to_i
 
           stream_name = pa['stream']
+          Rails.logger.info("#{stream_name}'s bit rate is #{bit_rate}")
           transcodes = []
           input_rtmp = "#{pa['tcUrl']}/#{stream_name}"
 
-          stream_reg = /[a-z|A-Z]+(\d+)p/ # livestream420p
+          stream_reg = /^([a-z|A-Z]+)_\d+p/ # livestream_420p
           origin_stream_name = stream_reg =~ stream_name ? $1 : stream_name
           output_rtmp_prefix = "#{pa['tcUrl']}/#{origin_stream_name}"
 
@@ -173,10 +174,10 @@ class Api::V1::SrsController < ApplicationController
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
           when 0..600 # 240p
-            ['240p'].each do |transcode_stream|
-              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
-              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
-            end
+            # ['240p'].each do |transcode_stream|
+            #   job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+            #   transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+            # end
           end
 
           transcodes.each do |t|

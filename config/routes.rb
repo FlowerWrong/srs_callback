@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  get 'live/clappr', to: 'live#clappr_index'
-  get 'live', to: 'live#videojs_index'
+  #get 'live/clappr', to: 'live#clappr_index'
+  #get 'live', to: 'live#videojs_index'
 
   root to: 'application#index'
   namespace :api do
@@ -13,8 +13,6 @@ Rails.application.routes.draw do
       get 'hls/:app/:stream_and_ts', to: 'srs#hls'
 
       get 'users', to: 'sessions#index'
-
-      post 'transcodes', to: 'transcodes#create'
     end
   end
 

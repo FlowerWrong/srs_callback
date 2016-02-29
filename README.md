@@ -92,6 +92,18 @@ gem sources -l
 gem install bundler
 ```
 
+## build ffmpeg on mac
+
+```zsh
+brew install ffmpeg --with-fdk-aac --with-ffplay --with-freetype --with-libass --with-libquvi --with-libvorbis --with-libvpx --with-opus --with-x265
+
+git clone http://source.ffmpeg.org/git/ffmpeg.git ffmpeg
+cd ffmpeg
+git checkout origin/release/2.8
+./configure --prefix=/Users/yang/dev/c/multimedia/ffmpeg-learning/ffmpegbuild --enable-gpl --enable-nonfree --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libxvid
+make && make install
+```
+
 ## bugs
 
 * `--with-http-server` must have, even if I do not use it.
