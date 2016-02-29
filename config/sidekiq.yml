@@ -1,0 +1,16 @@
+# @see https://github.com/mperham/sidekiq/blob/master/examples/config.yml
+# sidekiq -h
+---
+:concurrency: 5
+:pidfile: tmp/pids/sidekiq.pid
+:verbose: false
+
+# Set timeout to 8 on Heroku, longer if you manage your own systems.
+:timeout: 30
+
+staging:
+  :concurrency: 10
+production:
+  :concurrency: 20
+:queues:
+  - default

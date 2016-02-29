@@ -26,4 +26,4 @@ c:
 	rails c
 
 sidekiq:
-	bundle exec sidekiq -q default -L log/sidekiq.log
+	bundle exec sidekiq -e production -q default -L log/sidekiq.log -C config/sidekiq.yml -d
