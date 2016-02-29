@@ -78,7 +78,7 @@ class Api::V1::SrsController < ApplicationController
     render plain: '0', status: :ok
 
     Thread.new do
-      sleep 5
+      sleep 1
       scale_transcodes(@lc.id, pa)
       Rails.logger.info "on_publish thread status is #{Thread.current.status}"
       Thread.current.exit
