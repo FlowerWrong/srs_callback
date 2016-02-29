@@ -11,10 +11,10 @@ start_puma:
 
 # @see https://gist.github.com/tachesimazzoca/3891036
 restart_puma:
-	@[[ -s "$(PID)" ]] && kill -USR2 `cat $(PID)`
+	-kill -s USR2 `cat $(PID)`
 
 stop_puma:
-	@[[ -s "$(PID)" ]] && kill -QUIT `cat $(PID)`
+	-kill -s TERM `cat $(PID)`
 
 setup:
 	rake db:drop db:create db:migrate db:seed
