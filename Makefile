@@ -4,10 +4,11 @@ PID = ./tmp/pids/puma.pid
 
 start: setup start_puma
 
-pumap: setupp start_puma
+pumap: setupp
+	puma -e production -C config/puma.rb
 
 start_puma:
-	puma -C config/puma.rb
+	puma -e development -C config/puma.rb
 
 # @see https://gist.github.com/tachesimazzoca/3891036
 restart_puma:
@@ -28,6 +29,12 @@ test_prepare:
 
 c:
 	rails c
+
+resquep:
+	RAILS_ENV=production QUEUE=* rake environment resque:work
+
+resque:
+	RAILS_ENV=development QUEUE=* rake environment resque:work
 
 sidekiq:
 	bundle exec sidekiq -e development -q default -L log/sidekiq.log -C config/sidekiq.yml -d

@@ -24,6 +24,9 @@ gem 'redis-namespace'
 gem 'sidekiq'
 gem 'sidekiq-status'
 
+gem 'resque'
+gem 'resque-scheduler'
+
 gem 'rest-client', require: false
 
 gem 'silencer'

@@ -62,13 +62,20 @@ class Api::V1::SrsController < ApplicationController
 
       @live_transcodes.each do |lt|
         # FIXME how to del a job
-        flag = Sidekiq::Status.cancel(lt.job_id)
-        unless flag
-          queue = Sidekiq::Queue.new
-          queue.each do |job|
-            job.delete if job.jid == lt.job_id
-          end
-        end
+        # flag = Sidekiq::Status.cancel(lt.job_id)
+        # unless flag
+        #   queue = Sidekiq::Queue.new
+        #   queue.each do |job|
+        #     job.delete if job.jid == lt.job_id
+        #   end
+        # end
+        # @see http://stackoverflow.com/questions/34359912/how-to-kill-sidekiq-job-in-rails-4-with-activejob
+        ps = Sidekiq::ProcessSet.new
+        Rails.logger.info("Sidekiq process set are #{ps.size}, will be stoped")
+        ps.each(&:stop!)
+
+        # resque
+        # Resque.queues.each{|q| Resque.redis.del "queue:#{q}" }
         lt.update(status: 0)
       end unless @live_transcodes.blank?
     else
@@ -163,12 +170,12 @@ class Api::V1::SrsController < ApplicationController
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
             end
-          when 1000..1500 # 480p -> 360p
-            ['360p'].each do |transcode_stream|
-              job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
-              transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
-            end
-          when 600..1000 # 360p
+          # when 1000..1500 # 480p -> 360p
+          #   ['360p'].each do |transcode_stream|
+          #     job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
+          #     transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
+          #   end
+          when 600..1500 # 360p
             ['240p'].each do |transcode_stream|
               job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
               transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
