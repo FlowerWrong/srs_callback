@@ -44,6 +44,7 @@ GEM
     byebug (8.2.2)
     concurrent-ruby (1.0.1)
     connection_pool (2.2.0)
+    daemons (1.2.3)
     domain_name (0.5.20160216)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
@@ -161,6 +162,7 @@ PLATFORMS
 DEPENDENCIES
   awesome_print
   byebug
+  daemons
   hiredis
   jbuilder (~> 2.0)
   mysql2 (>= 0.3.18, < 0.5)
