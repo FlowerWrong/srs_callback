@@ -5,6 +5,7 @@ class TranscodeJob < ApplicationJob
     transcode_stream = args[0]
     input_rtmp = args[1] # rtmp://192.168.10.160/live/demo
     output_rtmp = args[2] # rtmp://192.168.10.160/live?token=11111111111111111111111111111111/livestream
+    transcode_id = args[3]
 
     # @see https://github.com/ossrs/srs/wiki/v2_CN_FFMPEG#transcode-rulers
     ffmpeg_opts = "-vcodec libx264 -b:v #{bitrate2resolution[transcode_stream][:bitrate]} -r 30 -s #{bitrate2resolution[transcode_stream][:width]}x#{bitrate2resolution[transcode_stream][:height]} -aspect #{bitrate2resolution[transcode_stream][:width]}:#{bitrate2resolution[transcode_stream][:height]} -threads 8 -acodec libfdk_aac -b:a 128000 -ar 44100  -ac 2"
@@ -15,7 +16,11 @@ class TranscodeJob < ApplicationJob
     # cmd.concat(other_options.split(" "))
     Rails.logger.info cmd
     cmd.reject!(&:empty?)
-    system(cmd.join(' '))
+    # system(cmd.join(' '))
+
+    pid = Process.spawn(cmd.join(' '))
+    transcode = Transcode.find(transcode_id)
+    transcode.update(pid: pid)
   end
 
   private
