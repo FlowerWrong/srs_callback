@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160307063419) do
+ActiveRecord::Schema.define(version: 20160112050142) do
 
   create_table "live_clients", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "client_id"
@@ -46,10 +46,9 @@ ActiveRecord::Schema.define(version: 20160307063419) do
     t.string   "app"
     t.string   "stream"
     t.integer  "status"
-    t.string   "job_id"
+    t.integer  "pid"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.string   "pid"
   end
 
 end

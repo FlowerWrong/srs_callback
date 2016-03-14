@@ -9,7 +9,7 @@ class CreateTranscodes < ActiveRecord::Migration[5.0]
       t.string :app
       t.string :stream
       t.integer :status
-      t.string :job_id
+      t.integer :pid
 
       t.timestamps
     end

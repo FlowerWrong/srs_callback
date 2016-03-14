@@ -2,6 +2,12 @@ Rails.application.routes.draw do
   #get 'live/clappr', to: 'live#clappr_index'
   #get 'live', to: 'live#videojs_index'
 
+  require 'sidekiq/web'
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    username == 'yang' && password == 'yang'
+  end # if Rails.env.production?
+  mount Sidekiq::Web, at: '/sidekiq'
+
   root to: 'application#index'
   namespace :api do
     namespace :v1 do

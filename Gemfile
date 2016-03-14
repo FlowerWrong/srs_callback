@@ -20,12 +20,10 @@ gem 'settingslogic'
 gem 'redis'
 gem 'hiredis'
 gem 'redis-namespace'
-# gem 'sinatra', github: 'sinatra/sinatra', require: nil
+
+gem 'sinatra', github: 'sinatra/sinatra', require: nil
 gem 'sidekiq'
 gem 'sidekiq-status'
-
-gem 'resque'
-gem 'resque-scheduler'
 
 gem 'rest-client', require: false
 
@@ -44,4 +42,4 @@ group :development do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby], require: false

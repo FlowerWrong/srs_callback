@@ -34,7 +34,7 @@ zh-CN:
         app: app
         stream: stream
         status: 1online,0offline
-        job_id: background job id
+        pid: ffmpeg pid
 
 
   date:

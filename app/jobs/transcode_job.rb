@@ -12,11 +12,10 @@ class TranscodeJob < ApplicationJob
 
     ffmpeg = Settings.ffmpeg_bin
 
-    cmd = %W(#{ffmpeg} -i #{input_rtmp} #{ffmpeg_opts} -f flv -y #{output_rtmp})
+    cmd = %W(#{ffmpeg} -v quiet -i #{input_rtmp} #{ffmpeg_opts} -f flv -y #{output_rtmp})
     # cmd.concat(other_options.split(" "))
     Rails.logger.info cmd
     cmd.reject!(&:empty?)
-    # system(cmd.join(' '))
 
     pid = Process.spawn(cmd.join(' '))
     transcode = Transcode.find(transcode_id)
