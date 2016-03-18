@@ -112,3 +112,4 @@ make && make install
 
 - [ ] avoid hls cache after live end, use a sidekiq task to del all *.ts
   file and *.m3u8
+- [ ] nginx 跨域 for hls only get method
