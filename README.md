@@ -107,3 +107,8 @@ make && make install
 ## bugs
 
 * `--with-http-server` must have, even if I do not use it.
+
+## todo
+
+- [ ] avoid hls cache after live end, use a sidekiq task to del all *.ts
+  file and *.m3u8
