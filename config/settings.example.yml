@@ -6,6 +6,8 @@ defaults: &defaults
   rtmp_api: 'http://127.0.0.1:1985/api/v1'
   ffmpeg_bin: ''
 
+  hls_dir: 'nginx hls dir'
+
 development:
   <<: *defaults
 
