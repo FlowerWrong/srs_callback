@@ -78,7 +78,7 @@ class Api::V1::SrsController < ApplicationController
       # 再标记直播流
       live_clients.each { |lc| lc.update(status: 0) }
       # 清楚所有的hls缓存
-      #
+      HlsCleanupJob.perform_later(pa['app'], pa['stream'])
     else
       render(plain: 'auth failed', status: 401) && return
     end
