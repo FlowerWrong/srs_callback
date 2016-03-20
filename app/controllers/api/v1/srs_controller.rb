@@ -1,6 +1,12 @@
 require 'json'
 require 'rest-client'
 
+class LiveStreamNotFoundException < StandardError
+  def initialize(msg = 'live stream not found in srs server response json string')
+    super(msg)
+  end
+end
+
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
 
@@ -86,7 +92,6 @@ class Api::V1::SrsController < ApplicationController
     render plain: '0', status: :ok
 
     Thread.new do
-      sleep 1
       scale_transcodes(@lc.id, pa)
       Rails.logger.info "on_publish thread status is #{Thread.current.status}"
       Thread.current.exit
@@ -130,13 +135,42 @@ class Api::V1::SrsController < ApplicationController
 
   def scale_transcodes(live_client_id, pa)
     if pa['action'] == 'on_publish'
-      # TODO retry
-      res_json_str = ::RestClient.get("#{Settings.rtmp_api}/streams/")
-      Rails.logger.info("srs server response streams str is #{res_json_str}")
-      res_hash = JSON.parse(res_json_str)
+      # NOTE if sleep time is too short, video and audio may be null("video":null,"audio":null), so retry untill video and audio not null
+      res_json_str = nil
+      res_hash = nil
+      sleep_time = 0.5
+      # 请求直播流的累积时间
+      spent_time = 0.00
+      # 请求直播流的累积次数
+      spent_number_of_times = 0
+      begin
+        sleep sleep_time
+        spent_time += sleep_time
+        spent_number_of_times += 1
+
+        res_json_str = ::RestClient.get("#{Settings.rtmp_api}/streams/")
+        Rails.logger.info("srs server response streams str is #{res_json_str}")
+
+        res_hash = JSON.parse(res_json_str)
+        has_live_stream = false
+        res_hash['streams'].each do |stream|
+          has_live_stream = true if stream['name'] == pa['stream'] && stream['app'] = pa['app'] && stream['publish']['active'] && !stream['video'].nil? && !stream['audio'].nil?
+        end
+        unless has_live_stream
+          raise LiveStreamNotFoundException
+        end
+      rescue
+         retry
+      end
+      return if res_json_str.nil? || res_hash.nil?
+      Rails.logger.info("Total spent #{spent_time}s to get srs server publish stream.")
+      Rails.logger.info("Total spent #{spent_number_of_times} number of times to get srs server publish stream.")
 
       res_hash['streams'].each do |stream|
         if stream['name'] == pa['stream'] && stream['app'] = pa['app'] && stream['publish']['active']
+          Rails.logger.info "json parsed stream is #{stream}"
+          next if stream['video'].nil? || stream['audio'].nil?
+
           video_data_rate = stream['video']['video_data_rate']
           audio_data_rate = stream['audio']['audio_data_rate']
           bit_rate = video_data_rate.to_i + audio_data_rate.to_i
