@@ -108,8 +108,18 @@ make && make install
 
 * `--with-http-server` must have, even if I do not use it.
 
+## hls cross
+
+```nginx
+location /{
+  add_header 'Access-Control-Allow-Origin' 'http://domain.com';
+  add_header 'Access-Control-Allow-Credentials' 'true';
+  add_header 'Access-Control-Allow-Methods' 'GET';
+}
+```
+
 ## todo
 
 - [x] avoid hls cache after live end, use a sidekiq task to del all *.ts file and *.m3u8
-- [ ] nginx 跨域 for hls only get method
+- [x] nginx 跨域 for hls only get method
 - [ ] 直播服务地址的api

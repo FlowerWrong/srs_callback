@@ -48,6 +48,6 @@ module SrsCallback
     config.active_job.queue_adapter = :sidekiq
     # config.active_job.queue_name_prefix = Rails.env
 
-    config.middleware.swap Rails::Rack::Logger, Silencer::Logger, silence: [%r{^/api/v1/hls}, %r{^/api/v1/hls}, %r{^/api/v1/dvrs}, %r{^/api/v1/sessions}, %r{^/api/v1/clients}, %r{^/sidekiq/stats}]
+    config.middleware.swap Rails::Rack::Logger, Silencer::Logger, silence: [%r{^/api/v1/hls}, %r{^/api/v1/hls}, %r{^/api/v1/dvrs}, %r{^/api/v1/sessions}, %r{^/api/v1/clients}, %r{^/sidekiq/}]
   end
 end
