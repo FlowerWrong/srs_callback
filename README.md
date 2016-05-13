@@ -2,8 +2,8 @@
 
 Srs callback with srs 2.0 release and ffmpeg.
 
-* ruby: 2.3.0
-* rails: 5.0 beta3
+* ruby: 2.3.1
+* rails: 5.0.0.rc1
 * mysql: 5.6+
 * ffmpeg: 2.1.1+(2.8.4)
 * srs: 2.0release or 3.0develop
@@ -65,12 +65,14 @@ sudo ./objs/nginx/sbin/nginx
 ./objs/srs -c conf/srs.conf
 ```
 
-## install ruby 2.3.0 from source code
+## install ruby 2.3.1 from source code
 
 ```bash
-wget https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.gz
-tar -zxvf ruby-2.3.0.tar.gz
-cd ruby-2.3.0/
+sudo apt-get install openssl libssl-dev
+
+wget https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz
+tar -zxvf ruby-2.3.1.tar.gz
+cd ruby-2.3.1/
 ./configure --prefix=/data/app/softwares/rubies
 make
 make install
@@ -86,7 +88,7 @@ sudo ln -s /data/app/softwares/rubies/bin/ruby /usr/bin/ruby
 sudo ln -s /data/app/softwares/rubies/bin/ /usr/bin/gem
 
 gem sources -l
-gem sources --add https://ruby.taobao.org/ --remove https://rubygems.org/
+gem source -a https://gems.ruby-china.org --remove https://rubygems.org/
 gem sources -l
 
 gem install bundler
