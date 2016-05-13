@@ -69,6 +69,7 @@ sudo ./objs/nginx/sbin/nginx
 
 ```bash
 sudo apt-get install openssl libssl-dev
+udo apt-get install mysql-server mysql-client libmysqlclient-dev
 
 wget https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz
 tar -zxvf ruby-2.3.1.tar.gz
