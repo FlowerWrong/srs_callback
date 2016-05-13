@@ -37,7 +37,7 @@ module SrsCallback
     config.i18n.default_locale = :'zh-CN'
 
     config.active_record.default_timezone = :local
-    config.time_zone = 'Beijing'
+    config.time_zone = 'Asia/Shanghai'
     config.encoding = 'utf-8'
 
     # Only loads a smaller set of middleware suitable for API only apps.
