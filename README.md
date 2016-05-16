@@ -121,6 +121,8 @@ location /{
 }
 ```
 
+[nginx cors](http://enable-cors.org/server_nginx.html)
+
 ## todo
 
 - [x] avoid hls cache after live end, use a sidekiq task to del all *.ts file and *.m3u8
