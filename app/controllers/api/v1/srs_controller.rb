@@ -80,6 +80,8 @@ class Api::V1::SrsController < ApplicationController
       @live_transcodes.each do |lt|
         Process.kill('KILL', lt.pid)
         lt.update(status: 0)
+        # FIXME
+        `killall -KILL ffmpeg` # kill all ffmpeg, there is a bug with sh -c
       end unless @live_transcodes.blank?
       # 再标记直播流
       live_clients.each { |lc| lc.update(status: 0) }
