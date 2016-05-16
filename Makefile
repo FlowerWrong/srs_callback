@@ -5,7 +5,7 @@ PID = ./tmp/pids/puma.pid
 start: setup start_puma
 
 pumap: setupp
-	puma -e production -C config/puma.rb
+	puma -e production -C config/puma.rb -d
 
 start_puma:
 	puma -e development -C config/puma.rb

@@ -128,3 +128,4 @@ location /{
 - [x] avoid hls cache after live end, use a sidekiq task to del all *.ts file and *.m3u8
 - [x] nginx 跨域 for hls only get method
 - [ ] 直播服务地址的api
+- [ ] There will be another `sh -c ffmpeg -v ...` and a `ffmpeg -v ...`
