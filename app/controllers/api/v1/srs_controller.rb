@@ -232,7 +232,8 @@ class Api::V1::SrsController < ApplicationController
               stream: "#{origin_stream_name}_#{ts}",
               status: 1
             )
-            TranscodeJob.perform_later(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
+            TranscodeJobWithoutSidekiq.perform(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
+            # TranscodeJob.perform_later(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
           end
         end
       end unless res_hash['streams'].blank?
