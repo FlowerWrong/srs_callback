@@ -204,19 +204,12 @@ class Api::V1::SrsController < ApplicationController
               transcodes << transcode_stream
             end
           # when 1000..1500 # 480p -> 360p
-          #   ['360p'].each do |transcode_stream|
-          #     job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
-          #     transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
-          #   end
+          # ...
           when 600..1500 # 360p
             ['240p'].each do |transcode_stream|
               transcodes << transcode_stream
             end
           when 0..600 # 240p
-            # ['240p'].each do |transcode_stream|
-            #   job = TranscodeJob.perform_later(transcode_stream, input_rtmp, "#{output_rtmp_prefix}_#{transcode_stream}")
-            #   transcodes << {transcode_stream: transcode_stream, job_id: job.provider_job_id}
-            # end
           end
 
           Rails.logger.info "scaled transcodes are #{transcodes.join(', ')}"
