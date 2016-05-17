@@ -234,6 +234,7 @@ class Api::V1::SrsController < ApplicationController
             )
             TranscodeJobWithoutSidekiq.perform(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
             # TranscodeJob.perform_later(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
+            Rails.logger.info("TranscodeJobWithoutSidekiq performed for #{input_rtmp}")
           end
         end
       end unless res_hash['streams'].blank?
