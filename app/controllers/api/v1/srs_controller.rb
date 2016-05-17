@@ -162,7 +162,7 @@ class Api::V1::SrsController < ApplicationController
           raise LiveStreamNotFoundException
         end
       rescue
-         retry
+         retry if spent_number_of_times < 10
       end
       return if res_json_str.nil? || res_hash.nil?
       Rails.logger.info("Total spent #{spent_time}s to get srs server publish stream.")
