@@ -129,3 +129,10 @@ location /{
 - [x] nginx 跨域 for hls only get method
 - [ ] 直播服务地址的api
 - [ ] There will be another `sh -c ffmpeg -v ...` and a `ffmpeg -v ...`
+
+## shell
+
+```bash
+ps -o ppid= -p 1111
+Sidekiq.redis { |conn| conn.flushdb }
+```
