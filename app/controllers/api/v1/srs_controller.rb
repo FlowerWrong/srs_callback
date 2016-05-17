@@ -152,11 +152,13 @@ class Api::V1::SrsController < ApplicationController
 
         res_json_str = ::RestClient.get("#{Settings.rtmp_api}/streams/")
         Rails.logger.info("srs server response streams str is #{res_json_str}")
+        Rails.logger.info("pa is #{pa}")
 
         res_hash = JSON.parse(res_json_str)
         has_live_stream = false
+        # FIXME flash media live encoder bug: audio for mp3 is null
         res_hash['streams'].each do |stream|
-          has_live_stream = true if stream['name'] == pa['stream'] && stream['app'] = pa['app'] && stream['publish']['active'] && !stream['video'].nil? && !stream['audio'].nil?
+          has_live_stream = true if stream['name'] == pa['stream'] && stream['app'] = pa['app'] && stream['publish']['active'] && !stream['video'].nil? # && !stream['audio'].nil?
         end
         unless has_live_stream
           raise LiveStreamNotFoundException
