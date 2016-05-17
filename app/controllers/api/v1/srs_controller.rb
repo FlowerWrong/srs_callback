@@ -93,6 +93,7 @@ class Api::V1::SrsController < ApplicationController
 
     render plain: '0', status: :ok
 
+    # FIXME bug when puma
     Thread.new do
       scale_transcodes(@lc.id, pa)
       Rails.logger.info "on_publish thread status is #{Thread.current.status}"

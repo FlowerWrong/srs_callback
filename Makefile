@@ -10,6 +10,9 @@ pumap: setupp
 start_puma:
 	puma -e development -C config/puma.rb
 
+unicornp:
+	bundle exec unicorn -E production -c config/unicorn.conf.rb -D
+
 # @see https://gist.github.com/tachesimazzoca/3891036
 restart_puma:
 	-kill -s USR2 `cat $(PID)`
