@@ -1,4 +1,7 @@
 class ScaleTranscodeJob < ApplicationJob
+
+  STREAM_REG = /^([a-z|A-Z]+)_\d+p/ # livestream_420p
+
   queue_as :default
 
   def perform(*args)

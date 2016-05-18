@@ -10,8 +10,6 @@ end
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
 
-  STREAM_REG = /^([a-z|A-Z]+)_\d+p/ # livestream_420p
-
   # on_connect
   # on_close
   def clients
