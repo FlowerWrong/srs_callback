@@ -77,12 +77,15 @@ class Api::V1::SrsController < ApplicationController
       end
 
       # 先取消所有转码
-      @live_transcodes.each do |lt|
-        Process.kill('KILL', lt.pid)
-        lt.update(status: 0)
+      unless @live_transcodes.blank?
+        @live_transcodes.each do |lt|
+          # Process.kill('KILL', lt.pid)
+          lt.update(status: 0)
+        end
         # FIXME
         `killall -KILL ffmpeg` # kill all ffmpeg, there is a bug with sh -c
-      end unless @live_transcodes.blank?
+      end
+
       # 再标记直播流
       live_clients.each { |lc| lc.update(status: 0) }
       # 清楚所有的hls缓存

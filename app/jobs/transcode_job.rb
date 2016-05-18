@@ -17,12 +17,14 @@ class TranscodeJob < ApplicationJob
     Rails.logger.info cmd
     cmd.reject!(&:empty?)
 
+    system(cmd.join(' '))
+
     # 开一个进程来执行
     # pid = Process.spawn(cmd.join(' '))
     # Process.wait(pid)
-    pid = spawn(cmd.join(' '))
-    transcode = Transcode.find(transcode_id)
-    transcode.update(pid: pid)
+    # pid = spawn(cmd.join(' '))
+    # transcode = Transcode.find(transcode_id)
+    # transcode.update(pid: pid)
   end
 
   private
