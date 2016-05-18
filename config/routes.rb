@@ -1,11 +1,8 @@
 Rails.application.routes.draw do
-  #get 'live/clappr', to: 'live#clappr_index'
-  #get 'live', to: 'live#videojs_index'
-
   require 'sidekiq/web'
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     username == 'yang' && password == 'yang'
-  end # if Rails.env.production?
+  end
   mount Sidekiq::Web, at: '/sidekiq'
 
   root to: 'application#index'
@@ -21,9 +18,4 @@ Rails.application.routes.draw do
       get 'users', to: 'sessions#index'
     end
   end
-
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
-  # Serve websocket cable requests in-process
-  # mount ActionCable.server => '/cable'
 end
