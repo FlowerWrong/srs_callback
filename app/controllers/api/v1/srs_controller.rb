@@ -228,8 +228,8 @@ class Api::V1::SrsController < ApplicationController
               stream: "#{origin_stream_name}_#{ts}",
               status: 1
             )
-            TranscodeJobWithoutSidekiq.perform(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
-            # TranscodeJob.perform_later(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
+            # TranscodeJobWithoutSidekiq.perform(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
+            TranscodeJob.perform_later(ts, input_rtmp, "#{output_rtmp_prefix}_#{ts}", transcode.id)
             Rails.logger.info("TranscodeJobWithoutSidekiq performed for #{input_rtmp}")
           end
         end
