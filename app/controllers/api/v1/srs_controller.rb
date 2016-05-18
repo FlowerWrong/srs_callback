@@ -98,7 +98,7 @@ class Api::V1::SrsController < ApplicationController
 
     # FIXME bug when puma
     if pa['action'] == 'on_publish' && !@lc.nil?
-      ScaleJob.perform_later(@lc.id, pa)
+      ScaleTranscodeJob.perform_later(@lc.id, pa)
     end
   end
 

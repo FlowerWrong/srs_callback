@@ -1,7 +1,4 @@
-require 'json'
-require 'rest-client'
-
-class ScaleJob < ApplicationJob
+class ScaleTranscodeJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
