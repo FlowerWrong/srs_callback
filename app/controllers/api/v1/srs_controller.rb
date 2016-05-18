@@ -1,14 +1,8 @@
-require 'json'
-require 'rest-client'
-
-class LiveStreamNotFoundException < StandardError
-  def initialize(msg = 'live stream not found in srs server response json string')
-    super(msg)
-  end
-end
 
 class Api::V1::SrsController < ApplicationController
   # @see https://github.com/ossrs/srs/wiki/v2_CN_HTTPCallback#http-callback-events
+
+  STREAM_REG = /^([a-z|A-Z]+)_\d+p/ # livestream_420p
 
   # on_connect
   # on_close

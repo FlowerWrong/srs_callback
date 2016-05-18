@@ -1,3 +1,12 @@
+require 'json'
+require 'rest-client'
+
+class LiveStreamNotFoundException < StandardError
+  def initialize(msg = 'live stream not found in srs server response json string')
+    super(msg)
+  end
+end
+
 class ScaleTranscodeJob < ApplicationJob
 
   STREAM_REG = /^([a-z|A-Z]+)_\d+p/ # livestream_420p
