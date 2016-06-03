@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/sinatra/sinatra.git
-  revision: b7dbfc4cfa1ad7236b2d5160ac4d6e3e0b45822d
+  revision: 5e9e23621c1f6abbd793b46452cb11ae8ca1277e
   specs:
     sinatra (2.0.0.pre.alpha)
       mustermann (~> 0.4)
@@ -51,7 +51,7 @@ GEM
     arel (7.0.0)
     awesome_print (1.6.1)
     builder (3.2.2)
-    byebug (9.0.0)
+    byebug (9.0.5)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.1.x)
@@ -66,7 +66,7 @@ GEM
     domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     erubis (2.7.0)
-    execjs (2.6.0)
+    execjs (2.7.0)
     ffi (1.9.10)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
@@ -74,7 +74,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    jbuilder (2.4.1)
+    jbuilder (2.5.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
     jquery-rails (4.1.1)
@@ -82,18 +82,18 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
-    listen (3.0.7)
-      rb-fsevent (>= 0.9.3)
-      rb-inotify (>= 0.9.7)
+    listen (3.0.8)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
     method_source (0.8.2)
-    mime-types (2.99.1)
+    mime-types (2.99.2)
     mini_portile2 (2.0.0)
-    minitest (5.8.4)
-    multi_json (1.12.0)
+    minitest (5.9.0)
+    multi_json (1.12.1)
     mustermann (0.4.0)
       tool (~> 0.2)
     mysql2 (0.4.4)
@@ -176,11 +176,11 @@ GEM
       sprockets (>= 3.0.0)
     thor (0.19.1)
     thread_safe (0.3.5)
-    tilt (2.0.3)
+    tilt (2.0.5)
     tool (0.2.3)
     turbolinks (5.0.0.beta2)
       turbolinks-source
-    turbolinks-source (5.0.0.beta4)
+    turbolinks-source (5.0.0.beta5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (3.0.0)
@@ -192,7 +192,7 @@ GEM
       activemodel (>= 4.2)
       debug_inspector
       railties (>= 4.2)
-    websocket-driver (0.6.3)
+    websocket-driver (0.6.4)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
 
@@ -230,4 +230,4 @@ DEPENDENCIES
   web-console
 
 BUNDLED WITH
-   1.12.3
+   1.12.5
